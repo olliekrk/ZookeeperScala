@@ -71,7 +71,8 @@ object AppRunner extends App {
       StdIn.readLine() match {
         case "tree" =>
           println(s"Tree for ZK node '$zkNode':")
-          appRunner.printTree()
+          val treeSize = appRunner.traverseTree(zkNode)(node => println(node.ok))
+          println(s"Total tree size is $treeSize".info)
         case _ =>
           println("Unknown command.".warn)
       }
