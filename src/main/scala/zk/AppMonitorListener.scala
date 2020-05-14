@@ -1,9 +1,11 @@
 package zk
 
+import org.apache.zookeeper.data.Stat
+
 trait AppMonitorListener {
 
-  def exists(data: Array[Byte]): Unit
+  def exists(stat: Stat, isAlive: Boolean): Unit
 
-  def closing(reason: Int): Unit
+  def closing(rc: Int): Unit
 
 }

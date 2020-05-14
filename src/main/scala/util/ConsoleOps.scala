@@ -6,8 +6,6 @@ object ConsoleOps {
 
     import Console._
 
-    def black = s"$BLACK$str"
-
     def red = s"$RED$str"
 
     def green = s"$GREEN$str"
@@ -22,21 +20,16 @@ object ConsoleOps {
 
     def white = s"$WHITE$str"
 
-    def blackBg = s"$BLACK_B$str"
+    // Aliases
 
-    def redBg = s"$RED_B$str"
+    def info: String = blue
 
-    def greenBg = s"$GREEN_B$str"
+    def err: String = red
 
-    def yellowBg = s"$YELLOW_B$str"
+    def warn: String = yellow
 
-    def blueBg = s"$BLUE_B$str"
+    def ok: String = green
 
-    def magentaBg = s"$MAGENTA_B$str"
-
-    def cyanBg = s"$CYAN_B$str"
-
-    def whiteBg = s"$WHITE_B$str"
   }
 
 }
