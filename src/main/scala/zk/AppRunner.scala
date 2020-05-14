@@ -17,12 +17,12 @@ class AppRunner(zkAddress: String,
 
   override val zk: ZooKeeper = new ZooKeeper(zkAddress, 30_000, this)
   private val appMonitor = new AppMonitor(zk, zkNode, this)
-  private var app: Option[Process] = None
+  private var app: Option[Process] = Option.empty
 
   override def process(event: WatchedEvent): Unit = appMonitor.process(event)
 
   override def exists(stat: Stat, isAlive: Boolean): Unit =
-    if (isAlive && app.isEmpty) {
+    if (isAlive && (app.isEmpty || app == null)) {
       println("Starting the process...".warn)
       app = Option {
         val process = Process(executableArgs)
@@ -69,7 +69,7 @@ object AppRunner extends App {
     while (true) {
       println("Waiting for input:".info)
       StdIn.readLine() match {
-        case "tree" =>
+        case "ls" =>
           println(s"Tree for ZK node '$zkNode':")
           val treeSize = appRunner.traverseTree(zkNode)(node => println(node.ok))
           println(s"Total tree size is $treeSize".info)

@@ -8,14 +8,15 @@ import org.apache.zookeeper.data.Stat
 import org.apache.zookeeper.{WatchedEvent, Watcher, ZooKeeper}
 import util.ConsoleOps._
 import java.util
+import scala.jdk.CollectionConverters._
 
 class AppMonitor(override val zk: ZooKeeper,
                  override val zkNode: String,
                  val listener: AppMonitorListener
                 ) extends Watcher with StatCallback with ChildrenCallback with TreePrinter {
 
-  var alive: Boolean = true
   listen()
+  var alive: Boolean = true
 
   override def process(event: WatchedEvent): Unit = {
     println(s"Received watched event: $event".ok)
@@ -24,10 +25,11 @@ class AppMonitor(override val zk: ZooKeeper,
         alive = false
         listener.closing(Code.SESSIONEXPIRED.intValue)
       case Event.EventType.NodeCreated | Event.EventType.NodeDeleted if event.getPath == zkNode =>
-        zk.exists(zkNode, true, this, null)
-        zk.getChildren(zkNode, true, this, null)
+        listen()
       case Event.EventType.NodeChildrenChanged =>
-        zk.getChildren(event.getPath, true, this, null)
+        val nodePath = event.getPath
+        val nodes = nodePath :: zk.getChildren(nodePath, false).asScala.map(nodePath + "/" + _).toList
+        nodes.foreach(zk.getChildren(_, true, this, null))
       case _ =>
         println("No action.".warn)
     }
