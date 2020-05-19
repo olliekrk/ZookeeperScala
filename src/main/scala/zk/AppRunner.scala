@@ -57,7 +57,7 @@ class AppRunner(zkAddress: String,
 
 
 object AppRunner extends App {
-  if (args.length < 4) {
+  if (args.length < 3) {
     println("Missing required arguments: <zk-address> <zk-node> <executable> {args}".warn)
     sys.exit(1)
   }
